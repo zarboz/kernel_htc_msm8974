@@ -125,7 +125,7 @@ static void init_x2apic_ldr(void)
 	}
 }
 
-static int __cpuinit
+static int
 update_clusterinfo(struct notifier_block *nfb, unsigned long action, void *hcpu)
 {
 	unsigned int this_cpu = (unsigned long)hcpu;

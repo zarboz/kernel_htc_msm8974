@@ -758,7 +758,7 @@ static int cpu_has_active_perf(int cpu)
 	return 0;
 }
 
-static int __cpuinit pmu_cpu_notify(struct notifier_block *b,
+static int pmu_cpu_notify(struct notifier_block *b,
 					unsigned long action, void *hcpu)
 {
 	int irq;
@@ -820,7 +820,7 @@ static void armpmu_update_counters(void)
 	}
 }
 
-static struct notifier_block __cpuinitdata pmu_cpu_notifier = {
+static struct notifier_block pmu_cpu_notifier = {
 	.notifier_call = pmu_cpu_notify,
 };
 

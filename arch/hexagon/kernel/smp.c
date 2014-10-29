@@ -127,7 +127,7 @@ void __init smp_prepare_boot_cpu(void)
 }
 
 
-void __cpuinit start_secondary(void)
+void start_secondary(void)
 {
 	unsigned int cpu;
 	unsigned long thread_ptr;
@@ -172,7 +172,7 @@ void __cpuinit start_secondary(void)
 
 
 
-int __cpuinit __cpu_up(unsigned int cpu)
+int __cpu_up(unsigned int cpu)
 {
 	struct task_struct *idle;
 	struct thread_info *thread;

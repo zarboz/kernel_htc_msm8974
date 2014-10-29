@@ -106,7 +106,7 @@ execute_on_irq_stack(int overflow, struct irq_desc *desc, int irq)
 	return 1;
 }
 
-void __cpuinit irq_ctx_init(int cpu)
+void irq_ctx_init(int cpu)
 {
 	union irq_ctx *irqctx;
 

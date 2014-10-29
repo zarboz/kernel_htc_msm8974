@@ -89,7 +89,7 @@ static void convert_to_wide(unsigned long *addr)
 }
 
 #ifdef CONFIG_64BIT
-void __cpuinit set_firmware_width_unlocked(void)
+void set_firmware_width_unlocked(void)
 {
 	int ret;
 
@@ -100,7 +100,7 @@ void __cpuinit set_firmware_width_unlocked(void)
 		parisc_narrow_firmware = 0;
 }
 	
-void __cpuinit set_firmware_width(void)
+void set_firmware_width(void)
 {
 	unsigned long flags;
 	spin_lock_irqsave(&pdc_lock, flags);
@@ -108,11 +108,11 @@ void __cpuinit set_firmware_width(void)
 	spin_unlock_irqrestore(&pdc_lock, flags);
 }
 #else
-void __cpuinit set_firmware_width_unlocked(void) {
+void set_firmware_width_unlocked(void) {
 	return;
 }
 
-void __cpuinit set_firmware_width(void) {
+void set_firmware_width(void) {
 	return;
 }
 #endif 
@@ -197,7 +197,7 @@ int pdc_chassis_warn(unsigned long *warn)
 	return retval;
 }
 
-int __cpuinit pdc_coproc_cfg_unlocked(struct pdc_coproc_cfg *pdc_coproc_info)
+int pdc_coproc_cfg_unlocked(struct pdc_coproc_cfg *pdc_coproc_info)
 {
 	int ret;
 
@@ -211,7 +211,7 @@ int __cpuinit pdc_coproc_cfg_unlocked(struct pdc_coproc_cfg *pdc_coproc_info)
 	return ret;
 }
 
-int __cpuinit pdc_coproc_cfg(struct pdc_coproc_cfg *pdc_coproc_info)
+int pdc_coproc_cfg(struct pdc_coproc_cfg *pdc_coproc_info)
 {
 	int ret;
 	unsigned long flags;

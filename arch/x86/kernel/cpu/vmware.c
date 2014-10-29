@@ -102,7 +102,7 @@ static bool __init vmware_platform(void)
 	return false;
 }
 
-static void __cpuinit vmware_set_cpu_features(struct cpuinfo_x86 *c)
+static void vmware_set_cpu_features(struct cpuinfo_x86 *c)
 {
 	set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
 	set_cpu_cap(c, X86_FEATURE_TSC_RELIABLE);

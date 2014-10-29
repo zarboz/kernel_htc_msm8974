@@ -53,7 +53,7 @@ static void *mailbox_0_regs[] = {
 	IOADDR(A_BCM1480_IMR_CPU3_BASE + R_BCM1480_IMR_MAILBOX_0_CPU),
 };
 
-void __cpuinit bcm1480_smp_init(void)
+void bcm1480_smp_init(void)
 {
 	unsigned int imask = STATUSF_IP4 | STATUSF_IP3 | STATUSF_IP2 |
 		STATUSF_IP1 | STATUSF_IP0;
@@ -77,14 +77,14 @@ static void bcm1480_send_ipi_mask(const struct cpumask *mask,
 		bcm1480_send_ipi_single(i, action);
 }
 
-static void __cpuinit bcm1480_init_secondary(void)
+static void bcm1480_init_secondary(void)
 {
 	extern void bcm1480_smp_init(void);
 
 	bcm1480_smp_init();
 }
 
-static void __cpuinit bcm1480_smp_finish(void)
+static void bcm1480_smp_finish(void)
 {
 	extern void sb1480_clockevent_init(void);
 
@@ -96,7 +96,7 @@ static void bcm1480_cpus_done(void)
 {
 }
 
-static void __cpuinit bcm1480_boot_secondary(int cpu, struct task_struct *idle)
+static void bcm1480_boot_secondary(int cpu, struct task_struct *idle)
 {
 	int retval;
 

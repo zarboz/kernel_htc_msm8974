@@ -376,7 +376,7 @@ static int guess_fsb(int mult)
 }
 
 
-static int __cpuinit longhaul_get_ranges(void)
+static int longhaul_get_ranges(void)
 {
 	unsigned int i, j, k = 0;
 	unsigned int ratio;
@@ -477,7 +477,7 @@ static int __cpuinit longhaul_get_ranges(void)
 }
 
 
-static void __cpuinit longhaul_setup_voltagescaling(void)
+static void longhaul_setup_voltagescaling(void)
 {
 	union msr_longhaul longhaul;
 	struct mV_pos minvid, maxvid, vid;
@@ -725,7 +725,7 @@ static int longhaul_setup_southbridge(void)
 	return 0;
 }
 
-static int __cpuinit longhaul_cpu_init(struct cpufreq_policy *policy)
+static int longhaul_cpu_init(struct cpufreq_policy *policy)
 {
 	struct cpuinfo_x86 *c = &cpu_data(0);
 	char *cpuname = NULL;

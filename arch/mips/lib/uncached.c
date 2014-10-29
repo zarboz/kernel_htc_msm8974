@@ -21,7 +21,7 @@
 #define TO_PHYS_MASK -1
 #endif
 
-unsigned long __cpuinit run_uncached(void *func)
+unsigned long run_uncached(void *func)
 {
 	register long sp __asm__("$sp");
 	register long ret __asm__("$2");

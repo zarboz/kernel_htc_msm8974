@@ -95,7 +95,7 @@ void cpu_hotplug_driver_unlock(void)
 ssize_t arch_cpu_probe(const char *buf, size_t count) { return -1; }
 ssize_t arch_cpu_release(const char *buf, size_t count) { return -1; }
 #else
-static struct task_struct *idle_thread_array[NR_CPUS] __cpuinitdata ;
+static struct task_struct *idle_thread_array[NR_CPUS] ;
 #define get_idle_for_cpu(x)      (idle_thread_array[(x)])
 #define set_idle_for_cpu(x, p)   (idle_thread_array[(x)] = (p))
 #endif
@@ -118,7 +118,7 @@ EXPORT_PER_CPU_SYMBOL(cpu_info);
 
 atomic_t init_deasserted;
 
-static void __cpuinit smp_callin(void)
+static void smp_callin(void)
 {
 	int cpuid, phys_id;
 	unsigned long timeout;
@@ -170,7 +170,7 @@ static void __cpuinit smp_callin(void)
 	cpumask_set_cpu(cpuid, cpu_callin_mask);
 }
 
-notrace static void __cpuinit start_secondary(void *unused)
+notrace static void start_secondary(void *unused)
 {
 	cpu_init();
 	x86_cpuinit.early_percpu_clock_init();
@@ -208,7 +208,7 @@ notrace static void __cpuinit start_secondary(void *unused)
 }
 
 
-void __cpuinit smp_store_cpu_info(int id)
+void smp_store_cpu_info(int id)
 {
 	struct cpuinfo_x86 *c = &cpu_data(id);
 
@@ -218,7 +218,7 @@ void __cpuinit smp_store_cpu_info(int id)
 		identify_secondary_cpu(c);
 }
 
-static void __cpuinit link_thread_siblings(int cpu1, int cpu2)
+static void link_thread_siblings(int cpu1, int cpu2)
 {
 	cpumask_set_cpu(cpu1, cpu_sibling_mask(cpu2));
 	cpumask_set_cpu(cpu2, cpu_sibling_mask(cpu1));
@@ -229,7 +229,7 @@ static void __cpuinit link_thread_siblings(int cpu1, int cpu2)
 }
 
 
-void __cpuinit set_cpu_sibling_map(int cpu)
+void set_cpu_sibling_map(int cpu)
 {
 	int i;
 	struct cpuinfo_x86 *c = &cpu_data(cpu);
@@ -345,7 +345,7 @@ void __inquire_remote_apic(int apicid)
 	}
 }
 
-int __cpuinit
+int
 wakeup_secondary_cpu_via_nmi(int logical_apicid, unsigned long start_eip)
 {
 	unsigned long send_status, accept_status = 0;
@@ -376,7 +376,7 @@ wakeup_secondary_cpu_via_nmi(int logical_apicid, unsigned long start_eip)
 	return (send_status | accept_status);
 }
 
-static int __cpuinit
+static int
 wakeup_secondary_cpu_via_init(int phys_apicid, unsigned long start_eip)
 {
 	unsigned long send_status, accept_status = 0;
@@ -467,7 +467,7 @@ struct create_idle {
 	int cpu;
 };
 
-static void __cpuinit do_fork_idle(struct work_struct *work)
+static void do_fork_idle(struct work_struct *work)
 {
 	struct create_idle *c_idle =
 		container_of(work, struct create_idle, work);
@@ -476,7 +476,7 @@ static void __cpuinit do_fork_idle(struct work_struct *work)
 	complete(&c_idle->done);
 }
 
-static void __cpuinit announce_cpu(int cpu, int apicid)
+static void announce_cpu(int cpu, int apicid)
 {
 	static int current_node = -1;
 	int node = early_cpu_to_node(cpu);
@@ -495,7 +495,7 @@ static void __cpuinit announce_cpu(int cpu, int apicid)
 			node, cpu, apicid);
 }
 
-static int __cpuinit do_boot_cpu(int apicid, int cpu)
+static int do_boot_cpu(int apicid, int cpu)
 {
 	unsigned long boot_error = 0;
 	unsigned long start_ip;
@@ -623,7 +623,7 @@ do_rest:
 	return boot_error;
 }
 
-int __cpuinit native_cpu_up(unsigned int cpu)
+int native_cpu_up(unsigned int cpu)
 {
 	int apicid = apic->cpu_present_to_apicid(cpu);
 	unsigned long flags;

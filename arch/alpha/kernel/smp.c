@@ -92,7 +92,7 @@ wait_boot_cpu_to_stop(int cpuid)
 		barrier();
 }
 
-void __cpuinit
+void
 smp_callin(void)
 {
 	int cpuid = hard_smp_processor_id();
@@ -163,7 +163,7 @@ wait_for_txrdy (unsigned long cpumask)
 	return -1;
 }
 
-static void __cpuinit
+static void
 send_secondary_console_msg(char *str, int cpuid)
 {
 	struct percpu_struct *cpu;
@@ -248,7 +248,7 @@ recv_secondary_console_msg(void)
 	hwrpb->txrdy = 0;
 }
 
-static int __cpuinit
+static int
 secondary_cpu_start(int cpuid, struct task_struct *idle)
 {
 	struct percpu_struct *cpu;
@@ -309,7 +309,7 @@ secondary_cpu_start(int cpuid, struct task_struct *idle)
 	return 0;
 }
 
-static int __cpuinit
+static int
 smp_boot_one_cpu(int cpuid)
 {
 	struct task_struct *idle;
@@ -424,7 +424,7 @@ smp_prepare_boot_cpu(void)
 {
 }
 
-int __cpuinit
+int
 __cpu_up(unsigned int cpu)
 {
 	smp_boot_one_cpu(cpu);

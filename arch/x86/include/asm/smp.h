@@ -173,7 +173,7 @@ static inline int wbinvd_on_all_cpus(void)
 }
 #endif 
 
-extern unsigned disabled_cpus __cpuinitdata;
+extern unsigned disabled_cpusdata;
 
 #ifdef CONFIG_X86_32_SMP
 #define raw_smp_processor_id() (percpu_read(cpu_number))

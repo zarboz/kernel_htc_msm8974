@@ -39,9 +39,9 @@
 #endif
 
 #define onchip_setup(x)					\
-static int x##_disabled __cpuinitdata = !cpu_has_##x;	\
+static int x##_disabled = !cpu_has_##x;	\
 							\
-static int __cpuinit x##_setup(char *opts)			\
+static int x##_setup(char *opts)			\
 {							\
 	x##_disabled = 1;				\
 	return 1;					\
@@ -55,7 +55,7 @@ onchip_setup(dsp);
 #define CPUOPM		0xff2f0000
 #define CPUOPM_RABD	(1 << 5)
 
-static void __cpuinit speculative_execution_init(void)
+static void speculative_execution_init(void)
 {
 	
 	__raw_writel(__raw_readl(CPUOPM) & ~CPUOPM_RABD, CPUOPM);
@@ -74,7 +74,7 @@ static void __cpuinit speculative_execution_init(void)
 #define EXPMASK_BRDSSLP		(1 << 1)
 #define EXPMASK_MMCAW		(1 << 4)
 
-static void __cpuinit expmask_init(void)
+static void expmask_init(void)
 {
 	unsigned long expmask = __raw_readl(EXPMASK);
 
@@ -183,7 +183,7 @@ static void detect_cache_shape(void)
 		l2_cache_shape = -1; 
 }
 
-static void __cpuinit fpu_init(void)
+static void fpu_init(void)
 {
 	
 	if (fpu_disabled && (current_cpu_data.flags & CPU_HAS_FPU)) {
@@ -196,7 +196,7 @@ static void __cpuinit fpu_init(void)
 }
 
 #ifdef CONFIG_SH_DSP
-static void __cpuinit release_dsp(void)
+static void release_dsp(void)
 {
 	unsigned long sr;
 
@@ -210,7 +210,7 @@ static void __cpuinit release_dsp(void)
 	);
 }
 
-static void __cpuinit dsp_init(void)
+static void dsp_init(void)
 {
 	unsigned long sr;
 
@@ -238,10 +238,10 @@ static void __cpuinit dsp_init(void)
 	release_dsp();
 }
 #else
-static inline void __cpuinit dsp_init(void) { }
+static inline void dsp_init(void) { }
 #endif 
 
-asmlinkage void __cpuinit cpu_init(void)
+asmlinkage void cpu_init(void)
 {
 	current_thread_info()->cpu = hard_smp_processor_id();
 

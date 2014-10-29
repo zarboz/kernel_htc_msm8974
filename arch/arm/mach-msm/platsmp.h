@@ -12,8 +12,8 @@
 
 extern volatile int pen_release;
 
-void __cpuinit msm_secondary_startup(void);
-void __cpuinit write_pen_release(int val);
+void msm_secondary_startup(void);
+void write_pen_release(int val);
 
 int platform_cpu_kill(unsigned int cpu);
 void platform_cpu_die(unsigned int cpu);

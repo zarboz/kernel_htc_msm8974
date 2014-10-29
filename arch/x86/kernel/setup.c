@@ -164,7 +164,7 @@ static struct resource bss_resource = {
 
 
 #ifdef CONFIG_X86_32
-struct cpuinfo_x86 new_cpu_data __cpuinitdata = {0, 0, 0, 0, -1, 1, 0, 0, -1};
+struct cpuinfo_x86 new_cpu_data = {0, 0, 0, 0, -1, 1, 0, 0, -1};
 struct cpuinfo_x86 boot_cpu_data __read_mostly = {0, 0, 0, 0, -1, 1, 0, 0, -1};
 EXPORT_SYMBOL(boot_cpu_data);
 static void set_mca_bus(int x)

@@ -1355,7 +1355,7 @@ parisc_hardware_description(struct parisc_device_id *id)
 }
 
 
-enum cpu_type __cpuinit
+enum cpu_type
 parisc_get_cpu_type(unsigned long hversion)
 {
 	struct hp_cpu_type_mask *ptr;

@@ -49,8 +49,8 @@ EXPORT_SYMBOL(node_data);
 
 static bootmem_data_t __initdata node0_bdata;
 
-unsigned long __cpuinitdata node_start_pfn[MAX_NUMNODES];
-unsigned long __cpuinitdata node_end_pfn[MAX_NUMNODES];
+unsigned long node_start_pfn[MAX_NUMNODES];
+unsigned long node_end_pfn[MAX_NUMNODES];
 unsigned long __initdata node_memmap_pfn[MAX_NUMNODES];
 unsigned long __initdata node_percpu_pfn[MAX_NUMNODES];
 unsigned long __initdata node_free_pfn[MAX_NUMNODES];
@@ -58,7 +58,7 @@ unsigned long __initdata node_free_pfn[MAX_NUMNODES];
 static unsigned long __initdata node_percpu[MAX_NUMNODES];
 
 #ifdef CONFIG_HIGHMEM
-unsigned long __cpuinitdata node_lowmem_end_pfn[MAX_NUMNODES];
+unsigned long node_lowmem_end_pfn[MAX_NUMNODES];
 
 static unsigned long __initdata mappable_physpages;
 #endif
@@ -231,7 +231,7 @@ static void *__init setup_pa_va_mapping(void)
 }
 #endif 
 
-static void __cpuinit store_permanent_mappings(void)
+static void store_permanent_mappings(void)
 {
 	int i;
 
@@ -740,7 +740,7 @@ subsys_initcall(topology_init);
 
 #endif 
 
-void __cpuinit setup_cpu(int boot)
+void setup_cpu(int boot)
 {
 	
 	if (!boot)

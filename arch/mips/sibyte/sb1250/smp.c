@@ -45,7 +45,7 @@ static void *mailbox_regs[] = {
 	IOADDR(A_IMR_CPU1_BASE + R_IMR_MAILBOX_CPU)
 };
 
-void __cpuinit sb1250_smp_init(void)
+void sb1250_smp_init(void)
 {
 	unsigned int imask = STATUSF_IP4 | STATUSF_IP3 | STATUSF_IP2 |
 		STATUSF_IP1 | STATUSF_IP0;
@@ -69,14 +69,14 @@ static inline void sb1250_send_ipi_mask(const struct cpumask *mask,
 		sb1250_send_ipi_single(i, action);
 }
 
-static void __cpuinit sb1250_init_secondary(void)
+static void sb1250_init_secondary(void)
 {
 	extern void sb1250_smp_init(void);
 
 	sb1250_smp_init();
 }
 
-static void __cpuinit sb1250_smp_finish(void)
+static void sb1250_smp_finish(void)
 {
 	extern void sb1250_clockevent_init(void);
 
@@ -88,7 +88,7 @@ static void sb1250_cpus_done(void)
 {
 }
 
-static void __cpuinit sb1250_boot_secondary(int cpu, struct task_struct *idle)
+static void sb1250_boot_secondary(int cpu, struct task_struct *idle)
 {
 	int retval;
 

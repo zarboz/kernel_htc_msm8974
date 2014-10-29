@@ -424,7 +424,7 @@ void __init find_memory(void)
 }
 
 #ifdef CONFIG_SMP
-void __cpuinit *per_cpu_init(void)
+void *per_cpu_init(void)
 {
 	int cpu;
 	static int first_time = 1;

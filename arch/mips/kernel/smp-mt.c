@@ -146,7 +146,7 @@ static void vsmp_send_ipi_mask(const struct cpumask *mask, unsigned int action)
 		vsmp_send_ipi_single(i, action);
 }
 
-static void __cpuinit vsmp_init_secondary(void)
+static void vsmp_init_secondary(void)
 {
 	extern int gic_present;
 
@@ -159,7 +159,7 @@ static void __cpuinit vsmp_init_secondary(void)
 					 STATUSF_IP6 | STATUSF_IP7);
 }
 
-static void __cpuinit vsmp_smp_finish(void)
+static void vsmp_smp_finish(void)
 {
 	
 	write_c0_compare(read_c0_count() + (8* mips_hpt_frequency/HZ));
@@ -177,7 +177,7 @@ static void vsmp_cpus_done(void)
 {
 }
 
-static void __cpuinit vsmp_boot_secondary(int cpu, struct task_struct *idle)
+static void vsmp_boot_secondary(int cpu, struct task_struct *idle)
 {
 	struct thread_info *gp = task_thread_info(idle);
 	dvpe();

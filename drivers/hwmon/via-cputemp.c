@@ -223,7 +223,7 @@ struct pdev_entry {
 static LIST_HEAD(pdev_list);
 static DEFINE_MUTEX(pdev_list_mutex);
 
-static int __cpuinit via_cputemp_device_add(unsigned int cpu)
+static int via_cputemp_device_add(unsigned int cpu)
 {
 	int err;
 	struct platform_device *pdev;
@@ -264,7 +264,7 @@ exit:
 	return err;
 }
 
-static void __cpuinit via_cputemp_device_remove(unsigned int cpu)
+static void via_cputemp_device_remove(unsigned int cpu)
 {
 	struct pdev_entry *p;
 
@@ -281,7 +281,7 @@ static void __cpuinit via_cputemp_device_remove(unsigned int cpu)
 	mutex_unlock(&pdev_list_mutex);
 }
 
-static int __cpuinit via_cputemp_cpu_callback(struct notifier_block *nfb,
+static int via_cputemp_cpu_callback(struct notifier_block *nfb,
 				 unsigned long action, void *hcpu)
 {
 	unsigned int cpu = (unsigned long) hcpu;

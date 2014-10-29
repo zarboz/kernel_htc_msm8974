@@ -888,7 +888,7 @@ static struct irq_chip bfin_gpio_irqchip = {
 	.irq_set_wake = bfin_gpio_set_wake,
 };
 
-void __cpuinit init_exception_vectors(void)
+void init_exception_vectors(void)
 {
 	bfin_write_EVT2(evt_nmi);
 	bfin_write_EVT3(trap);

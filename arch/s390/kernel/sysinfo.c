@@ -416,7 +416,7 @@ void s390_adjust_jiffies(void)
 	free_page((unsigned long) info);
 }
 
-void __cpuinit calibrate_delay(void)
+void calibrate_delay(void)
 {
 	s390_adjust_jiffies();
 	

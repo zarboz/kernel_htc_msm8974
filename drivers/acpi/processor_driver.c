@@ -428,7 +428,7 @@ err_power_exit:
 	return result;
 }
 
-static int __cpuinit acpi_processor_add(struct acpi_device *device)
+static int acpi_processor_add(struct acpi_device *device)
 {
 	struct acpi_processor *pr = NULL;
 	int result = 0;

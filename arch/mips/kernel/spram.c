@@ -29,7 +29,7 @@
 #define read_c0_errctl(x) read_c0_ecc(x)
 #define write_c0_errctl(x) write_c0_ecc(x)
 
-static __cpuinit unsigned int bis_c0_errctl(unsigned int set)
+static unsigned int bis_c0_errctl(unsigned int set)
 {
 	unsigned int res;
 	res = read_c0_errctl();
@@ -37,7 +37,7 @@ static __cpuinit unsigned int bis_c0_errctl(unsigned int set)
 	return res;
 }
 
-static __cpuinit void ispram_store_tag(unsigned int offset, unsigned int data)
+static void ispram_store_tag(unsigned int offset, unsigned int data)
 {
 	unsigned int errctl;
 
@@ -56,7 +56,7 @@ static __cpuinit void ispram_store_tag(unsigned int offset, unsigned int data)
 }
 
 
-static __cpuinit unsigned int ispram_load_tag(unsigned int offset)
+static unsigned int ispram_load_tag(unsigned int offset)
 {
 	unsigned int data;
 	unsigned int errctl;
@@ -74,7 +74,7 @@ static __cpuinit unsigned int ispram_load_tag(unsigned int offset)
 	return data;
 }
 
-static __cpuinit void dspram_store_tag(unsigned int offset, unsigned int data)
+static void dspram_store_tag(unsigned int offset, unsigned int data)
 {
 	unsigned int errctl;
 
@@ -90,7 +90,7 @@ static __cpuinit void dspram_store_tag(unsigned int offset, unsigned int data)
 }
 
 
-static __cpuinit unsigned int dspram_load_tag(unsigned int offset)
+static unsigned int dspram_load_tag(unsigned int offset)
 {
 	unsigned int data;
 	unsigned int errctl;
@@ -107,7 +107,7 @@ static __cpuinit unsigned int dspram_load_tag(unsigned int offset)
 	return data;
 }
 
-static __cpuinit void probe_spram(char *type,
+static void probe_spram(char *type,
 	    unsigned int base,
 	    unsigned int (*read)(unsigned int),
 	    void (*write)(unsigned int, unsigned int))
@@ -184,7 +184,7 @@ static __cpuinit void probe_spram(char *type,
 		offset += 2 * SPRAM_TAG_STRIDE;
 	}
 }
-void __cpuinit spram_config(void)
+void spram_config(void)
 {
 	struct cpuinfo_mips *c = &current_cpu_data;
 	unsigned int config0;

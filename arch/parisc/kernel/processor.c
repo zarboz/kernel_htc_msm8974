@@ -50,7 +50,7 @@ DEFINE_PER_CPU(struct cpuinfo_parisc, cpu_data);
 extern int update_cr16_clocksource(void);	
 
 
-static void __cpuinit
+static void
 init_percpu_prof(unsigned long cpunum)
 {
 	struct cpuinfo_parisc *p;
@@ -61,7 +61,7 @@ init_percpu_prof(unsigned long cpunum)
 }
 
 
-static int __cpuinit processor_probe(struct parisc_device *dev)
+static int processor_probe(struct parisc_device *dev)
 {
 	unsigned long txn_addr;
 	unsigned long cpuid;
@@ -219,7 +219,7 @@ void __init collect_boot_cpu_data(void)
 
 
 
-int __cpuinit init_per_cpu(int cpunum)
+int init_per_cpu(int cpunum)
 {
 	int ret;
 	struct pdc_coproc_cfg coproc_cfg;

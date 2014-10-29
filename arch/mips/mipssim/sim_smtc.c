@@ -45,12 +45,12 @@ static inline void ssmtc_send_ipi_mask(const struct cpumask *mask,
 		ssmtc_send_ipi_single(i, action);
 }
 
-static void __cpuinit ssmtc_init_secondary(void)
+static void ssmtc_init_secondary(void)
 {
 	smtc_init_secondary();
 }
 
-static void __cpuinit ssmtc_smp_finish(void)
+static void ssmtc_smp_finish(void)
 {
 	smtc_smp_finish();
 }
@@ -59,7 +59,7 @@ static void ssmtc_cpus_done(void)
 {
 }
 
-static void __cpuinit ssmtc_boot_secondary(int cpu, struct task_struct *idle)
+static void ssmtc_boot_secondary(int cpu, struct task_struct *idle)
 {
 	smtc_boot_secondary(cpu, idle);
 }

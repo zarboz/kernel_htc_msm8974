@@ -665,7 +665,7 @@ void __init early_init_mmu(void)
 }
 
 #ifdef CONFIG_SMP
-void __cpuinit early_init_mmu_secondary(void)
+void early_init_mmu_secondary(void)
 {
 	
 	if (!firmware_has_feature(FW_FEATURE_LPAR))

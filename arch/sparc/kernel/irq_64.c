@@ -777,7 +777,7 @@ void notrace init_irqwork_curcpu(void)
 	trap_block[cpu].irq_worklist_pa = 0UL;
 }
 
-static void __cpuinit notrace register_one_mondo(unsigned long paddr, unsigned long type, unsigned long qmask)
+static void notrace register_one_mondo(unsigned long paddr, unsigned long type, unsigned long qmask)
 {
 	unsigned long num_entries = (qmask + 1) / 64;
 	unsigned long status;
@@ -790,7 +790,7 @@ static void __cpuinit notrace register_one_mondo(unsigned long paddr, unsigned l
 	}
 }
 
-void __cpuinit notrace sun4v_register_mondo_queues(int this_cpu)
+void notrace sun4v_register_mondo_queues(int this_cpu)
 {
 	struct trap_per_cpu *tb = &trap_block[this_cpu];
 

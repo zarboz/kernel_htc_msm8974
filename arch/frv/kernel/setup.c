@@ -648,7 +648,7 @@ static void __init reserve_dma_coherent(void)
 } 
 #endif
 
-void __cpuinit calibrate_delay(void)
+void calibrate_delay(void)
 {
 	loops_per_jiffy = __delay_loops_MHz * (1000000 / HZ);
 

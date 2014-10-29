@@ -110,9 +110,9 @@ static __init int reset_init_affinity(void)
 }
 late_initcall(reset_init_affinity);
 
-static struct cpumask cpu_started __cpuinitdata;
+static struct cpumask cpu_started;
 
-static void __cpuinit start_secondary(void)
+static void start_secondary(void)
 {
 	int cpuid = smp_processor_id();
 
@@ -148,7 +148,7 @@ static void __cpuinit start_secondary(void)
 	smp_nap();
 }
 
-void __cpuinit online_secondary(void)
+void online_secondary(void)
 {
 	local_flush_tlb();
 
@@ -175,7 +175,7 @@ void __cpuinit online_secondary(void)
 	cpu_idle();
 }
 
-int __cpuinit __cpu_up(unsigned int cpu)
+int __cpu_up(unsigned int cpu)
 {
 	
 	static int timeout;

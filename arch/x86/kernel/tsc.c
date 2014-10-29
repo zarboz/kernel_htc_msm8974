@@ -573,7 +573,7 @@ static void __init check_system_tsc_reliable(void)
 		tsc_clocksource_reliable = 1;
 }
 
-__cpuinit int unsynchronized_tsc(void)
+int unsynchronized_tsc(void)
 {
 	if (!cpu_has_tsc || tsc_unstable)
 		return 1;
@@ -719,7 +719,7 @@ void __init tsc_init(void)
 }
 
 #ifdef CONFIG_SMP
-unsigned long __cpuinit calibrate_delay_is_known(void)
+unsigned long calibrate_delay_is_known(void)
 {
 	int i, cpu = smp_processor_id();
 

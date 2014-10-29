@@ -323,7 +323,7 @@ static void __init xstate_enable_boot_cpu(void)
 	       pcntxt_mask, xstate_size);
 }
 
-void __cpuinit xsave_init(void)
+void xsave_init(void)
 {
 	static __refdata void (*next_func)(void) = xstate_enable_boot_cpu;
 	void (*this_func)(void);

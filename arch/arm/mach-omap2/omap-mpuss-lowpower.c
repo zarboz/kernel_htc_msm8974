@@ -230,7 +230,7 @@ int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state)
 	return 0;
 }
 
-int __cpuinit omap4_hotplug_cpu(unsigned int cpu, unsigned int power_state)
+int omap4_hotplug_cpu(unsigned int cpu, unsigned int power_state)
 {
 	unsigned int cpu_state = 0;
 

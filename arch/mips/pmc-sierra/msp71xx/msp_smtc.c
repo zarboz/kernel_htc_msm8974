@@ -23,7 +23,7 @@ static void msp_smtc_send_ipi_mask(const struct cpumask *mask,
 		msp_smtc_send_ipi_single(i, action);
 }
 
-static void __cpuinit msp_smtc_init_secondary(void)
+static void msp_smtc_init_secondary(void)
 {
 	int myvpe;
 
@@ -35,13 +35,13 @@ static void __cpuinit msp_smtc_init_secondary(void)
 	smtc_init_secondary();
 }
 
-static void __cpuinit msp_smtc_boot_secondary(int cpu,
+static void msp_smtc_boot_secondary(int cpu,
 					struct task_struct *idle)
 {
 	smtc_boot_secondary(cpu, idle);
 }
 
-static void __cpuinit msp_smtc_smp_finish(void)
+static void msp_smtc_smp_finish(void)
 {
 	smtc_smp_finish();
 }

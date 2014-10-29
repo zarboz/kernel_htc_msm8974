@@ -133,7 +133,7 @@ find_bootmap_location (u64 start, u64 end, void *arg)
 
 #ifdef CONFIG_SMP
 static void *cpu_data;
-void * __cpuinit
+void *
 per_cpu_init (void)
 {
 	static bool first_time = true;

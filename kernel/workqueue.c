@@ -2198,7 +2198,7 @@ static bool gcwq_has_idle_workers(struct global_cwq *gcwq)
 	return false;
 }
 
-static int __cpuinit trustee_thread(void *__gcwq)
+static int trustee_thread(void *__gcwq)
 {
 	struct global_cwq *gcwq = __gcwq;
 	struct worker_pool *pool;
@@ -2326,7 +2326,7 @@ static int __cpuinit trustee_thread(void *__gcwq)
 	return 0;
 }
 
-static void __cpuinit wait_trustee_state(struct global_cwq *gcwq, int state)
+static void wait_trustee_state(struct global_cwq *gcwq, int state)
 __releases(&gcwq->lock)
 __acquires(&gcwq->lock)
 {

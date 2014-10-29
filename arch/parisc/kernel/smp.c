@@ -61,9 +61,9 @@ static int smp_debug_lvl = 0;
 
 volatile struct task_struct *smp_init_current_idle_task;
 
-static volatile int cpu_now_booting __cpuinitdata;
+static volatile int cpu_now_booting;
 
-static int parisc_max_cpus __cpuinitdata = 1;
+static int parisc_max_cpus = 1;
 
 static DEFINE_PER_CPU(spinlock_t, ipi_lock);
 
@@ -316,7 +316,7 @@ void __init smp_callin(void)
 	panic("smp_callin() AAAAaaaaahhhh....\n");
 }
 
-int __cpuinit smp_boot_one_cpu(int cpuid)
+int smp_boot_one_cpu(int cpuid)
 {
 	const struct cpuinfo_parisc *p = &per_cpu(cpu_data, cpuid);
 	struct task_struct *idle;
@@ -397,7 +397,7 @@ void smp_cpus_done(unsigned int cpu_max)
 }
 
 
-int __cpuinit __cpu_up(unsigned int cpu)
+int __cpu_up(unsigned int cpu)
 {
 	if (cpu != 0 && cpu < parisc_max_cpus)
 		smp_boot_one_cpu(cpu);

@@ -311,7 +311,7 @@ struct plat_smp_ops bmips_smp_ops = {
 #endif 
 
 
-static void __cpuinit bmips_wr_vec(unsigned long dst, char *start, char *end)
+static void bmips_wr_vec(unsigned long dst, char *start, char *end)
 {
 	memcpy((void *)dst, start, end - start);
 	dma_cache_wback((unsigned long)start, end - start);
@@ -319,7 +319,7 @@ static void __cpuinit bmips_wr_vec(unsigned long dst, char *start, char *end)
 	instruction_hazard();
 }
 
-static inline void __cpuinit bmips_nmi_handler_setup(void)
+static inline void bmips_nmi_handler_setup(void)
 {
 	bmips_wr_vec(BMIPS_NMI_RESET_VEC, &bmips_reset_nmi_vec,
 		&bmips_reset_nmi_vec_end);
@@ -327,7 +327,7 @@ static inline void __cpuinit bmips_nmi_handler_setup(void)
 		&bmips_smp_int_vec_end);
 }
 
-void __cpuinit bmips_ebase_setup(void)
+void bmips_ebase_setup(void)
 {
 	unsigned long new_ebase = ebase;
 	void __iomem __maybe_unused *cbr;

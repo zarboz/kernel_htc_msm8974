@@ -559,7 +559,7 @@ static void __init report_platform_properties(void)
 	mdesc_release(hp);
 }
 
-static void __cpuinit fill_in_one_cache(cpuinfo_sparc *c,
+static void fill_in_one_cache(cpuinfo_sparc *c,
 					struct mdesc_handle *hp,
 					u64 mp)
 {
@@ -604,7 +604,7 @@ static void __cpuinit fill_in_one_cache(cpuinfo_sparc *c,
 	}
 }
 
-static void __cpuinit mark_core_ids(struct mdesc_handle *hp, u64 mp, int core_id)
+static void mark_core_ids(struct mdesc_handle *hp, u64 mp, int core_id)
 {
 	u64 a;
 
@@ -637,7 +637,7 @@ static void __cpuinit mark_core_ids(struct mdesc_handle *hp, u64 mp, int core_id
 	}
 }
 
-static void __cpuinit set_core_ids(struct mdesc_handle *hp)
+static void set_core_ids(struct mdesc_handle *hp)
 {
 	int idx;
 	u64 mp;
@@ -662,7 +662,7 @@ static void __cpuinit set_core_ids(struct mdesc_handle *hp)
 	}
 }
 
-static void __cpuinit mark_proc_ids(struct mdesc_handle *hp, u64 mp, int proc_id)
+static void mark_proc_ids(struct mdesc_handle *hp, u64 mp, int proc_id)
 {
 	u64 a;
 
@@ -681,7 +681,7 @@ static void __cpuinit mark_proc_ids(struct mdesc_handle *hp, u64 mp, int proc_id
 	}
 }
 
-static void __cpuinit __set_proc_ids(struct mdesc_handle *hp, const char *exec_unit_name)
+static void __set_proc_ids(struct mdesc_handle *hp, const char *exec_unit_name)
 {
 	int idx;
 	u64 mp;
@@ -702,13 +702,13 @@ static void __cpuinit __set_proc_ids(struct mdesc_handle *hp, const char *exec_u
 	}
 }
 
-static void __cpuinit set_proc_ids(struct mdesc_handle *hp)
+static void set_proc_ids(struct mdesc_handle *hp)
 {
 	__set_proc_ids(hp, "exec_unit");
 	__set_proc_ids(hp, "exec-unit");
 }
 
-static void __cpuinit get_one_mondo_bits(const u64 *p, unsigned int *mask,
+static void get_one_mondo_bits(const u64 *p, unsigned int *mask,
 					 unsigned long def, unsigned long max)
 {
 	u64 val;
@@ -730,7 +730,7 @@ use_default:
 	*mask = ((1U << def) * 64U) - 1U;
 }
 
-static void __cpuinit get_mondo_data(struct mdesc_handle *hp, u64 mp,
+static void get_mondo_data(struct mdesc_handle *hp, u64 mp,
 				     struct trap_per_cpu *tb)
 {
 	static int printed;
@@ -757,7 +757,7 @@ static void __cpuinit get_mondo_data(struct mdesc_handle *hp, u64 mp,
 	}
 }
 
-static void * __cpuinit mdesc_iterate_over_cpus(void *(*func)(struct mdesc_handle *, u64, int, void *), void *arg, cpumask_t *mask)
+static void * mdesc_iterate_over_cpus(void *(*func)(struct mdesc_handle *, u64, int, void *), void *arg, cpumask_t *mask)
 {
 	struct mdesc_handle *hp = mdesc_grab();
 	void *ret = NULL;
@@ -787,7 +787,7 @@ out:
 	return ret;
 }
 
-static void * __cpuinit record_one_cpu(struct mdesc_handle *hp, u64 mp, int cpuid, void *arg)
+static void * record_one_cpu(struct mdesc_handle *hp, u64 mp, int cpuid, void *arg)
 {
 	ncpus_probed++;
 #ifdef CONFIG_SMP
@@ -796,7 +796,7 @@ static void * __cpuinit record_one_cpu(struct mdesc_handle *hp, u64 mp, int cpui
 	return NULL;
 }
 
-void __cpuinit mdesc_populate_present_mask(cpumask_t *mask)
+void mdesc_populate_present_mask(cpumask_t *mask)
 {
 	if (tlb_type != hypervisor)
 		return;
@@ -805,7 +805,7 @@ void __cpuinit mdesc_populate_present_mask(cpumask_t *mask)
 	mdesc_iterate_over_cpus(record_one_cpu, NULL, mask);
 }
 
-static void * __cpuinit fill_in_one_cpu(struct mdesc_handle *hp, u64 mp, int cpuid, void *arg)
+static void * fill_in_one_cpu(struct mdesc_handle *hp, u64 mp, int cpuid, void *arg)
 {
 	const u64 *cfreq = mdesc_get_property(hp, mp, "clock-frequency", NULL);
 	struct trap_per_cpu *tb;
@@ -850,7 +850,7 @@ static void * __cpuinit fill_in_one_cpu(struct mdesc_handle *hp, u64 mp, int cpu
 	return NULL;
 }
 
-void __cpuinit mdesc_fill_in_cpu_data(cpumask_t *mask)
+void mdesc_fill_in_cpu_data(cpumask_t *mask)
 {
 	struct mdesc_handle *hp;
 

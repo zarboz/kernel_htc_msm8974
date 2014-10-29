@@ -260,7 +260,7 @@ sigsegv:
 	return true;
 }
 
-static void __cpuinit vsyscall_set_cpu(int cpu)
+static void vsyscall_set_cpu(int cpu)
 {
 	unsigned long d;
 	unsigned long node = 0;
@@ -278,13 +278,13 @@ static void __cpuinit vsyscall_set_cpu(int cpu)
 	write_gdt_entry(get_cpu_gdt_table(cpu), GDT_ENTRY_PER_CPU, &d, DESCTYPE_S);
 }
 
-static void __cpuinit cpu_vsyscall_init(void *arg)
+static void cpu_vsyscall_init(void *arg)
 {
 	
 	vsyscall_set_cpu(raw_smp_processor_id());
 }
 
-static int __cpuinit
+static int
 cpu_vsyscall_notifier(struct notifier_block *n, unsigned long action, void *arg)
 {
 	long cpu = (long)arg;

@@ -21,11 +21,11 @@ static inline void up_send_ipi_mask(const struct cpumask *mask,
 	panic(KERN_ERR "%s called", __func__);
 }
 
-static void __cpuinit up_init_secondary(void)
+static void up_init_secondary(void)
 {
 }
 
-static void __cpuinit up_smp_finish(void)
+static void up_smp_finish(void)
 {
 }
 
@@ -33,7 +33,7 @@ static void up_cpus_done(void)
 {
 }
 
-static void __cpuinit up_boot_secondary(int cpu, struct task_struct *idle)
+static void up_boot_secondary(int cpu, struct task_struct *idle)
 {
 }
 

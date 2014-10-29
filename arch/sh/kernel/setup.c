@@ -151,7 +151,7 @@ disable:
 #endif
 }
 
-void __cpuinit calibrate_delay(void)
+void calibrate_delay(void)
 {
 	struct clk *clk = clk_get(NULL, "cpu_clk");
 

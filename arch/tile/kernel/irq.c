@@ -156,7 +156,7 @@ void __init init_IRQ(void)
 	ipi_init();
 }
 
-void __cpuinit setup_irq_regs(void)
+void setup_irq_regs(void)
 {
 	
 	unmask_irqs(~0UL);

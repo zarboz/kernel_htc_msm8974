@@ -1294,7 +1294,7 @@ rcu_torture_shutdown(void *arg)
 
 #ifdef CONFIG_HOTPLUG_CPU
 
-static int __cpuinit
+static int
 rcu_torture_onoff(void *arg)
 {
 	int cpu;
@@ -1347,7 +1347,7 @@ rcu_torture_onoff(void *arg)
 	return 0;
 }
 
-static int __cpuinit
+static int
 rcu_torture_onoff_init(void)
 {
 	int ret;
@@ -1384,7 +1384,7 @@ static void rcu_torture_onoff_cleanup(void)
 
 #endif 
 
-static int __cpuinit rcu_torture_stall(void *args)
+static int rcu_torture_stall(void *args)
 {
 	unsigned long stop_at;
 

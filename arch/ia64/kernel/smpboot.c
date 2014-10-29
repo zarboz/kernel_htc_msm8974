@@ -297,7 +297,7 @@ smp_setup_percpu_timer (void)
 {
 }
 
-static void __cpuinit
+static void
 smp_callin (void)
 {
 	int cpuid, phys_id, itc_master;
@@ -368,7 +368,7 @@ smp_callin (void)
 }
 
 
-int __cpuinit
+int
 start_secondary (void *unused)
 {
 	
@@ -385,7 +385,7 @@ start_secondary (void *unused)
 	return 0;
 }
 
-struct pt_regs * __cpuinit idle_regs(struct pt_regs *regs)
+struct pt_regs * idle_regs(struct pt_regs *regs)
 {
 	return NULL;
 }
@@ -397,7 +397,7 @@ struct create_idle {
 	int cpu;
 };
 
-void __cpuinit
+void
 do_fork_idle(struct work_struct *work)
 {
 	struct create_idle *c_idle =
@@ -407,7 +407,7 @@ do_fork_idle(struct work_struct *work)
 	complete(&c_idle->done);
 }
 
-static int __cpuinit
+static int
 do_boot_cpu (int sapicid, int cpu)
 {
 	int timeout;
@@ -665,7 +665,7 @@ set_cpu_sibling_map(int cpu)
 	}
 }
 
-int __cpuinit
+int
 __cpu_up (unsigned int cpu)
 {
 	int ret;
