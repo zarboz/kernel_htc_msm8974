@@ -51,5 +51,9 @@ unsigned long acpuclk_power_collapse(void);
 unsigned long acpuclk_wait_for_irq(void);
 
 void acpuclk_register(struct acpuclk_data *data);
-
+/**
+ * msm_cpufreq_get_freq() - Get a CPU's clock rate in KHz
+ * @cpu: CPU to query the rate of (until it's fixed by QCOM...)
+ */
+unsigned int msm_cpufreq_get_freq(unsigned int cpu);
 #endif 
