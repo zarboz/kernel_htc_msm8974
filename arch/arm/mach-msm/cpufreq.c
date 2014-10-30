@@ -257,7 +257,7 @@ static int msm_cpufreq_verify(struct cpufreq_policy *policy)
 	return 0;
 }
 
-nsigned int msm_cpufreq_get_freq(unsigned int cpu)
+unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 {
 	if (is_clk)
 		return clk_get_rate(cpu_clk[cpu]) / 1000;
@@ -291,13 +291,7 @@ static int msm_cpufreq_init(struct cpufreq_policy *policy)
 	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
 #endif
 
-	if (is_clk)
-		if (policy->cpu >= 1 && is_sync)
-			cur_freq = clk_get_rate(cpu_clk[0])/1000;
-		else
-			cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
-	else
-		cur_freq = acpuclk_get_rate(policy->cpu);
+	cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
 
 	if (cpufreq_frequency_table_target(policy, table, cur_freq,
 	    CPUFREQ_RELATION_H, &index) &&
