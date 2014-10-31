@@ -1,170 +1,140 @@
 #
-# linux/arch/arm/boot/compressed/Makefile
+# arch/arm/boot/Makefile
 #
-# create a compressed vmlinuz image from the original vmlinux
+# This file is included by the global makefile so that you can add your own
+# architecture-specific flags and dependencies.
+#
+# This file is subject to the terms and conditions of the GNU General Public
+# License.  See the file "COPYING" in the main directory of this archive
+# for more details.
+#
+# Copyright (C) 1995-2002 Russell King
 #
 
-OBJS		=
-plus_sec := $(call as-instr,.arch_extension sec,+sec)
-
-# Ensure that mmcif loader code appears early in the image
-# to minimise that number of bocks that have to be read in
-# order to load it.
-ifeq ($(CONFIG_ZBOOT_ROM_MMCIF),y)
-ifeq ($(CONFIG_ARCH_SH7372),y)
-OBJS		+= mmcif-sh7372.o
-endif
+ifneq ($(MACHINE),)
+include $(srctree)/$(MACHINE)/Makefile.boot
 endif
 
-AFLAGS_head.o := -DTEXT_OFFSET=$(TEXT_OFFSET)
-AFLAGS_head.o += -Wa,-march=armv7-a$(plus_sec)
-HEAD = head.o
+# Note: the following conditions must always be true:
+#   ZRELADDR == virt_to_phys(PAGE_OFFSET + TEXT_OFFSET)
+#   PARAMS_PHYS must be within 4MB of ZRELADDR
+#   INITRD_PHYS must be in RAM
+ZRELADDR    := $(zreladdr-y)
+PARAMS_PHYS := $(params_phys-y)
+INITRD_PHYS := $(initrd_phys-y)
 
-AFLAGS_misc.o +=-Wa,-march=armv7-a$(plus_sec)
-MISC = misc.o
+export ZRELADDR INITRD_PHYS PARAMS_PHYS
 
-AFLAGS_decompress.o += -Wa,-march=armv7-a$(plus_sec)
-DECOMPRESS = decompress.o
+targets := Image zImage xipImage bootpImage uImage
 
-FONTC	= $(srctree)/drivers/video/console/font_acorn_8x8.c
-
-#
-# Architecture dependencies
-#
-ifeq ($(CONFIG_ARCH_ACORN),y)
-OBJS		+= ll_char_wr.o font.o
-endif
-
-ifeq ($(CONFIG_ARCH_SHARK),y)
-OBJS		+= head-shark.o ofw-shark.o
-endif
-
-ifeq ($(CONFIG_ARCH_P720T),y)
-# Borrow this code from SA1100
-OBJS		+= head-sa1100.o
-endif
-
-ifeq ($(CONFIG_ARCH_SA1100),y)
-OBJS		+= head-sa1100.o
-endif
-
-ifeq ($(CONFIG_ARCH_VT8500),y)
-OBJS		+= head-vt8500.o
-endif
-
-ifeq ($(CONFIG_CPU_XSCALE),y)
-OBJS		+= head-xscale.o
-endif
-
-ifeq ($(CONFIG_PXA_SHARPSL_DETECT_MACH_ID),y)
-OBJS		+= head-sharpsl.o
-endif
-
-ifeq ($(CONFIG_CPU_ENDIAN_BE32),y)
-ifeq ($(CONFIG_CPU_CP15),y)
-OBJS		+= big-endian.o
+DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES))
+ifneq ($(DTB_NAMES),)
+DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
 else
-# The endian should be set by h/w design.
+DTB_LIST := $(htc_dtb-y)
 endif
-endif
+DTB_OBJS := $(addprefix $(obj)/,$(DTB_LIST))
 
-ifeq ($(CONFIG_ARCH_SHMOBILE),y)
-OBJS		+= head-shmobile.o
-endif
+ifeq ($(CONFIG_XIP_KERNEL),y)
 
-#
-# We now have a PIC decompressor implementation.  Decompressors running
-# from RAM should not define ZTEXTADDR.  Decompressors running directly
-# from ROM or Flash must define ZTEXTADDR (preferably via the config)
-# FIXME: Previous assignment to ztextaddr-y is lost here. See SHARK
-ifeq ($(CONFIG_ZBOOT_ROM),y)
-ZTEXTADDR	:= $(CONFIG_ZBOOT_ROM_TEXT)
-ZBSSADDR	:= $(CONFIG_ZBOOT_ROM_BSS)
+$(obj)/xipImage: vmlinux FORCE
+	$(call if_changed,objcopy)
+	@echo '  Kernel: $@ is ready (physical address: $(CONFIG_XIP_PHYS_ADDR))'
+
+$(obj)/Image $(obj)/zImage: FORCE
+	@echo 'Kernel configured for XIP (CONFIG_XIP_KERNEL=y)'
+	@echo 'Only the xipImage target is available in this case'
+	@false
+
 else
-ZTEXTADDR	:= 0
-ZBSSADDR	:= ALIGN(8)
+
+$(obj)/xipImage: FORCE
+	@echo 'Kernel not configured for XIP (CONFIG_XIP_KERNEL!=y)'
+	@false
+
+$(obj)/Image: vmlinux FORCE
+	$(call if_changed,objcopy)
+	@echo '  Kernel: $@ is ready'
+
+$(obj)/compressed/vmlinux: $(obj)/Image FORCE
+	$(Q)$(MAKE) $(build)=$(obj)/compressed $@
+
+$(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
+	$(call if_changed,objcopy)
+	@echo '  Kernel: $@ is ready'
+
+$(obj)/zImage-dtb:	$(obj)/zImage $(DTB_OBJS) FORCE
+	$(call if_changed,cat)
+	@echo '  Kernel: $@ is ready'
+
 endif
 
-SEDFLAGS	= s/TEXT_START/$(ZTEXTADDR)/;s/BSS_START/$(ZBSSADDR)/
+targets += $(DTB_LIST)
 
-suffix_$(CONFIG_KERNEL_GZIP) := gzip
-suffix_$(CONFIG_KERNEL_LZO)  := lzo
-suffix_$(CONFIG_KERNEL_LZMA) := lzma
-suffix_$(CONFIG_KERNEL_XZ)   := xzkern
+# Rule to build device tree blobs
+$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+	$(call if_changed_dep,dtc)
 
-targets := vmlinux vmlinux.lds \
-		 piggy.$(suffix_y) piggy.$(suffix_y).o \
-		 font.o font.c head.o misc.o decompress.o $(OBJS)
+$(obj)/dtbs: $(DTB_OBJS)
 
-# Make sure files are removed during clean
-extra-y       += piggy.gzip piggy.lzo piggy.lzma piggy.xzkern lib1funcs.S ashldi3.S
+clean-files := *.dtb
 
-ifeq ($(CONFIG_FUNCTION_TRACER),y)
-ORIG_CFLAGS := $(KBUILD_CFLAGS)
-KBUILD_CFLAGS = $(subst -pg, , $(ORIG_CFLAGS))
+ifneq ($(LOADADDR),)
+  UIMAGE_LOADADDR=$(LOADADDR)
+else
+  ifeq ($(CONFIG_ZBOOT_ROM),y)
+    UIMAGE_LOADADDR=$(CONFIG_ZBOOT_ROM_TEXT)
+  else
+    UIMAGE_LOADADDR=$(ZRELADDR)
+  endif
 endif
 
-ccflags-y := -fpic -fno-builtin
-asflags-y := -Wa,-march=all
+check_for_multiple_loadaddr = \
+if [ $(words $(UIMAGE_LOADADDR)) -gt 1 ]; then \
+	echo 'multiple load addresses: $(UIMAGE_LOADADDR)'; \
+	echo 'This is incompatible with uImages'; \
+	echo 'Specify LOADADDR on the commandline to build an uImage'; \
+	false; \
+fi
 
-# Supply ZRELADDR to the decompressor via a linker symbol.
-ifneq ($(CONFIG_AUTO_ZRELADDR),y)
-LDFLAGS_vmlinux += --defsym zreladdr=$(ZRELADDR)
-endif
-ifeq ($(CONFIG_CPU_ENDIAN_BE8),y)
-LDFLAGS_vmlinux += --be8
-endif
-# ?
-LDFLAGS_vmlinux += -p
-# Report unresolved symbol references
-LDFLAGS_vmlinux += --no-undefined
-# Delete all temporary local symbols
-LDFLAGS_vmlinux += -X
-# Next argument is a linker script
-LDFLAGS_vmlinux += -T
+$(obj)/uImage:	$(obj)/zImage FORCE
+	@$(check_for_multiple_loadaddr)
+	$(call if_changed,uimage)
+	@echo '  Image $@ is ready'
 
-# For __aeabi_uidivmod
-AFLAGS_lib1funcs.o +=-Wa,-march=armv7-a$(plus_sec)
-lib1funcs = $(obj)/lib1funcs.o
+$(obj)/bootp/bootp: $(obj)/zImage initrd FORCE
+	$(Q)$(MAKE) $(build)=$(obj)/bootp $@
+	@:
 
-$(obj)/lib1funcs.S: $(srctree)/arch/$(SRCARCH)/lib/lib1funcs.S FORCE
-	$(call cmd,shipped)
+$(obj)/bootpImage: $(obj)/bootp/bootp FORCE
+	$(call if_changed,objcopy)
+	@echo '  Kernel: $@ is ready'
 
-# For __aeabi_llsl
-AFLAGS_ashldi3.o +=-Wa,-march=armv7-a$(plus_sec)
-ashldi3 = $(obj)/ashldi3.o
+PHONY += initrd FORCE
+initrd:
+	@test "$(INITRD_PHYS)" != "" || \
+	(echo This machine does not support INITRD; exit -1)
+	@test "$(INITRD)" != "" || \
+	(echo You must specify INITRD; exit -1)
 
-$(obj)/ashldi3.S: $(srctree)/arch/$(SRCARCH)/lib/ashldi3.S FORCE
-	$(call cmd,shipped)
+install: $(obj)/Image
+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+	$(obj)/Image System.map "$(INSTALL_PATH)"
 
-# We need to prevent any GOTOFF relocs being used with references
-# to symbols in the .bss section since we cannot relocate them
-# independently from the rest at run time.  This can be achieved by
-# ensuring that no private .bss symbols exist, as global symbols
-# always have a GOT entry which is what we need.
-# The .data section is already discarded by the linker script so no need
-# to bother about it here.
-check_for_bad_syms = \
-bad_syms=$$($(CROSS_COMPILE)nm $@ | sed -n 's/^.\{8\} [bc] \(.*\)/\1/p') && \
-[ -z "$$bad_syms" ] || \
-  ( echo "following symbols must have non local/private scope:" >&2; \
-    echo "$$bad_syms" >&2; rm -f $@; false )
+zinstall: $(obj)/zImage
+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+	$(obj)/zImage System.map "$(INSTALL_PATH)"
 
-$(obj)/vmlinux: $(obj)/vmlinux.lds $(obj)/$(HEAD) $(obj)/$(MISC) $(obj)/$(DECOMPRESS) $(obj)/piggy.$(suffix_y).o \
-    $(addprefix $(obj)/, $(OBJS)) $(lib1funcs) $(ashldi3) FORCE
-	$(call if_changed,ld)
-	@$(check_for_bad_syms)
+uinstall: $(obj)/uImage
+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+	$(obj)/uImage System.map "$(INSTALL_PATH)"
 
-$(obj)/piggy.$(suffix_y): $(obj)/../Image FORCE
-	$(call if_changed,$(suffix_y))
+zi:
+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+	$(obj)/zImage System.map "$(INSTALL_PATH)"
 
-AFLAGS_piggy.$(suffix_y).o += -Wa,-march=armv7-a$(plus_sec)
-$(obj)/piggy.$(suffix_y).o:  $(obj)/piggy.$(suffix_y) FORCE
+i:
+	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+	$(obj)/Image System.map "$(INSTALL_PATH)"
 
-CFLAGS_font.o := -Dstatic=
-
-$(obj)/font.c: $(FONTC)
-	$(call cmd,shipped)
-
-$(obj)/vmlinux.lds: $(obj)/vmlinux.lds.in arch/arm/boot/Makefile $(KCONFIG_CONFIG)
-	@sed "$(SEDFLAGS)" < $< > $@
+subdir-	    := bootp compressed
