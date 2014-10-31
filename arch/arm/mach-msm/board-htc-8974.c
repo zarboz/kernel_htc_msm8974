@@ -606,7 +606,25 @@ static void __init htc_8974_early_memory(void)
 	reserve_info = &htc_8974_reserve_info;
 	of_scan_flat_dt(dt_scan_for_memory_hole, htc_8974_reserve_table);
 }
+#ifdef CONFIG_BRICKED_THERMAL
+static struct msm_thermal_data msm_thermal_pdata = {
+	.sensor_id = 0,
+	.poll_ms = 400,
+	.shutdown_temp = 94,
 
+	.allowed_max_high = 90,
+	.allowed_max_low = 86,
+	.allowed_max_freq = 300000,
+
+	.allowed_mid_high = 87,
+	.allowed_mid_low = 82,
+	.allowed_mid_freq = 960000,
+
+	.allowed_low_high = 85,
+	.allowed_low_low = 79,
+	.allowed_low_freq = 1728000,
+};
+#endif
 #if defined(CONFIG_HTC_BATT_8960)
 #ifdef CONFIG_HTC_PNPMGR
 extern int pnpmgr_battery_charging_enabled(int charging_enabled);
@@ -714,7 +732,11 @@ void __init htc_8974_add_drivers(void)
 	krait_power_init();
 	msm_clock_init(&msm8974_clock_init_data);
 	tsens_tm_init_driver();
+#ifdef CONFIG_BRICKED_THERMAL
+	msm_thermal_init(&msm_thermal_pdata);
+#else
 	msm_thermal_device_init();
+#endif
 #if defined(CONFIG_HTC_BATT_8960)
 	htc_batt_cell_register();
 	msm8974_add_batt_devices();
