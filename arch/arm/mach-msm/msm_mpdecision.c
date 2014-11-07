@@ -115,7 +115,7 @@ static void unboost_cpu(int cpu);
 static cputime64_t mpdec_paused_until = 0;
 
 static unsigned long get_rate(int cpu) {
-	return acpuclk_get_rate(cpu);
+	return msm_cpufreq_get_freq(cpu);
 }
 
 static int get_slowest_cpu(void) {
